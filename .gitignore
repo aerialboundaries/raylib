@@ -1,0 +1,20 @@
+# まずすべて無視
+*
+
+# .c と .h は無視しない
+!*.c
+!*.h
+
+# Makefile も無視しない
+!Makefile
+
+# サブディレクトリも対象にする場合
+!*/
+
+# .gitignore
+!*.gitignore
+
+# .txt .mdも無視しない
+!*.txt
+!*.md
+
