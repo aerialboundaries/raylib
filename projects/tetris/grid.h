@@ -4,7 +4,7 @@
 #define NUMCOLS 10
 
 typedef struct grid_type *Grid;
-enum colors {
+typedef enum colors {
   darkGrey,
   green,
   red,
@@ -14,7 +14,7 @@ enum colors {
   cyan,
   blue,
   MAX_COLOR
-};
+} Colors;
 
 Grid create(void);
 void destroy(Grid g);
