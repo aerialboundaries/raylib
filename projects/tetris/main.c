@@ -1,5 +1,7 @@
 #include <raylib.h>
 
+#include "block.h"
+#include "blocks.h"
 #include "colors.h"
 #include "grid.h"
 
@@ -16,14 +18,20 @@ int main(void)
 
   printgrid(gameGrid);
 
+  // example T block
+  Block currentBlock = create_block(T_BLOCK);
+
+  // main loop
   while (!WindowShouldClose()) {
     BeginDrawing();
     ClearBackground(colors[darkBlue]);
     Draw(gameGrid);
+    draw_block(currentBlock);
 
     EndDrawing();
   }
 
+  destroy_block(currentBlock);
   destroy_grid(gameGrid);
   CloseWindow();
 
