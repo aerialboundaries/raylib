@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "colors.h"
 #include "grid.h"
 
 static void terminate(const char *message)
@@ -15,14 +16,8 @@ struct grid_type {
   int rows;
   int cols;
   int cellSize;
-  int colors[MAX_COLOR][4];
+  int colors[MAX_COLOR];
 };
-
-static const int COLOR_RGB[MAX_COLOR][4] = {
-    [darkGrey] = {26, 31, 40, 255}, [green] = {47, 230, 23, 255},
-    [red] = {232, 18, 18, 255},     [orange] = {226, 116, 17, 255},
-    [yellow] = {237, 234, 4, 255},  [purple] = {166, 0, 247, 255},
-    [cyan] = {21, 204, 209, 255},   [blue] = {13, 64, 216, 255}};
 
 Grid create(void)
 {
@@ -32,7 +27,7 @@ Grid create(void)
   g->rows = NUMROWS;
   g->cols = NUMCOLS;
   g->cellSize = 30; // cell size for 300 x 600
-  memcpy(g->colors, COLOR_RGB, sizeof(COLOR_RGB));
+  memcpy(g->colors, colors, sizeof(colors));
 
   return g;
 }

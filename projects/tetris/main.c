@@ -1,10 +1,10 @@
 #include <raylib.h>
 
+#include "colors.h"
 #include "grid.h"
 
 int main(void)
 {
-  Color darkBlue = {44, 44, 127, 255};
   InitWindow(300, 600, "raylib Tetris");
   SetTargetFPS(60);
 
@@ -14,7 +14,7 @@ int main(void)
 
   while (!WindowShouldClose()) {
     BeginDrawing();
-    ClearBackground(darkBlue);
+    ClearBackground(colors[darkBlue]);
 
     EndDrawing();
   }
