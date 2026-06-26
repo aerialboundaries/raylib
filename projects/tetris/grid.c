@@ -67,3 +67,8 @@ void Draw(Grid g)
     }
   }
 }
+
+void set_cell_value(Grid g, int row, int col, int value)
+{
+  g->grid[row][col] = value;
+}

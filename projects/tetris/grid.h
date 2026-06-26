@@ -11,3 +11,4 @@ void destroy(Grid g);
 void initialize(Grid g);
 void printgrid(Grid g);
 void Draw(Grid g);
+void set_cell_value(Grid g, int row, int col, int value);

@@ -10,6 +10,10 @@ int main(void)
 
   Grid gameGrid = create();
   initialize(gameGrid);
+  set_cell_value(gameGrid, 0, 0, 1);
+  set_cell_value(gameGrid, 3, 5, 4);
+  set_cell_value(gameGrid, 17, 8, 7);
+
   printgrid(gameGrid);
 
   while (!WindowShouldClose()) {
