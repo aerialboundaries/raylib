@@ -30,3 +30,13 @@ Block create_block(void)
 
   return b;
 }
+
+void destroy_block(Block b)
+{
+  free(b);
+}
+
+void initialize_block(Block b)
+{
+  ::
+}
