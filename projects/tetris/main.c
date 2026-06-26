@@ -15,6 +15,7 @@ int main(void)
   while (!WindowShouldClose()) {
     BeginDrawing();
     ClearBackground(colors[darkBlue]);
+    Draw(gameGrid);
 
     EndDrawing();
   }

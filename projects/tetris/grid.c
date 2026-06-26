@@ -1,3 +1,4 @@
+#include <raylib.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -53,5 +54,16 @@ void printgrid(Grid g)
       printf("%d ", g->grid[row][column]);
     }
     printf("\n");
+  }
+}
+
+void Draw(Grid g)
+{
+  for (int row = 0; row < NUMROWS; row++) {
+    for (int column = 0; column < NUMCOLS; column++) {
+      int cellValue = g->grid[row][column];
+      DrawRectangle(column * g->cellSize + 1, row * g->cellSize + 1,
+                    g->cellSize - 1, g->cellSize - 1, colors[cellValue]);
+    }
   }
 }

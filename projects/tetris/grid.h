@@ -10,4 +10,4 @@ Grid create(void);
 void destroy(Grid g);
 void initialize(Grid g);
 void printgrid(Grid g);
-void Draw(void);
+void Draw(Grid g);
