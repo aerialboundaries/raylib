@@ -25,7 +25,7 @@ Block create_block(void)
 {
   Block b = malloc(sizeof(struct block_type));
   if (b == NULL)
-    terminate("Error in create: grid could not be created.");
+    terminate("Error in create: block could not be created.");
   memcpy(b->colors, colors, sizeof(colors));
 
   return b;
@@ -38,5 +38,4 @@ void destroy_block(Block b)
 
 void initialize_block(Block b)
 {
-  ::
 }
