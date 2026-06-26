@@ -8,8 +8,8 @@ int main(void)
   InitWindow(300, 600, "raylib Tetris");
   SetTargetFPS(60);
 
-  Grid gameGrid = create();
-  initialize(gameGrid);
+  Grid gameGrid = create_grid();
+  initialize_grid(gameGrid);
   set_cell_value(gameGrid, 0, 0, 1);
   set_cell_value(gameGrid, 3, 5, 4);
   set_cell_value(gameGrid, 17, 8, 7);
@@ -24,7 +24,7 @@ int main(void)
     EndDrawing();
   }
 
-  destroy(gameGrid);
+  destroy_grid(gameGrid);
   CloseWindow();
 
   return 0;

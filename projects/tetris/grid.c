@@ -17,10 +17,10 @@ struct grid_type {
   int rows;
   int cols;
   int cellSize;
-  int colors[MAX_COLOR];
+  Color colors[MAX_COLOR];
 };
 
-Grid create(void)
+Grid create_grid(void)
 {
   Grid g = malloc(sizeof(struct grid_type));
   if (g == NULL)
@@ -33,12 +33,12 @@ Grid create(void)
   return g;
 }
 
-void destroy(Grid g)
+void destroy_grid(Grid g)
 {
   free(g);
 }
 
-void initialize(Grid g)
+void initialize_grid(Grid g)
 {
   for (int row = 0; row < NUMROWS; row++) {
     for (int column = 0; column < NUMCOLS; column++) {

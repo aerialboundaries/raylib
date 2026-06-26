@@ -6,9 +6,9 @@
 
 typedef struct grid_type *Grid;
 
-Grid create(void);
-void destroy(Grid g);
-void initialize(Grid g);
+Grid create_grid(void);
+void destroy_grid(Grid g);
+void initialize_grid(Grid g);
 void printgrid(Grid g);
 void Draw(Grid g);
 void set_cell_value(Grid g, int row, int col, int value);
