@@ -33,7 +33,7 @@ Block create_block(int id)
   b->rotationState = 0;
   b->offset.row = 0;    // start from top of screen
   b->offset.column = 3; // start from middle of screen
-                        //
+
   memcpy(b->colors, colors, sizeof(colors));
 
   return b;

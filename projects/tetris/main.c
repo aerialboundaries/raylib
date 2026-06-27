@@ -19,7 +19,7 @@ int main(void)
   printgrid(gameGrid);
 
   // example T block
-  Block currentBlock = create_block(T_BLOCK);
+  Block currentBlock = create_block(I_BLOCK);
 
   // main loop
   while (!WindowShouldClose()) {
