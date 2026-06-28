@@ -12,14 +12,10 @@ int main(void)
 
   Grid gameGrid = create_grid();
   initialize_grid(gameGrid);
-  set_cell_value(gameGrid, 0, 0, 1);
-  set_cell_value(gameGrid, 3, 5, 4);
-  set_cell_value(gameGrid, 17, 8, 7);
-
   printgrid(gameGrid);
 
   // example T block
-  Block currentBlock = create_block(I_BLOCK);
+  Block currentBlock = create_block(L_BLOCK);
 
   // main loop
   while (!WindowShouldClose()) {

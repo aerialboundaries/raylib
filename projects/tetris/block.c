@@ -44,7 +44,7 @@ void destroy_block(Block b)
   free(b);
 }
 
-/* ブロックを画面に描画する関数を追加しました */
+/* tentative drawing block */
 void draw_block(Block b)
 {
   /* blocks.c で定義されている配列から、現在の回転状態の4つのセルの座標を取得 */
