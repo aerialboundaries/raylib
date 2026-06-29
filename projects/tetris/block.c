@@ -59,3 +59,9 @@ void draw_block(Block b)
                   b->cellSize - 1, b->cellSize - 1, b->colors[b->id]);
   }
 }
+
+void Move(Block b, int rows, int columns)
+{
+  b->offset.row += rows;
+  b->offset.column += columns;
+}
