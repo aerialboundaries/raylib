@@ -31,8 +31,22 @@ Block create_block(int id)
   b->id = id;
   b->cellSize = 30;
   b->rotationState = 0;
-  b->offset.row = 0;    // start from top of screen
-  b->offset.column = 3; // start from middle of screen
+
+  // switch文の中で、すべてのケース（defaultを含む）で完全に初期化を行います
+  switch (id) {
+  case 3: // 例: Iブロック
+    b->offset.row = -1;
+    b->offset.column = 3;
+    break;
+  case 4: // 例: Oブロック
+    b->offset.row = 0;
+    b->offset.column = 4;
+    break;
+  default: // その他のブロック（T, L, J, S, Zなど）
+    b->offset.row = 0;
+    b->offset.column = 3;
+    break;
+  }
 
   memcpy(b->colors, colors, sizeof(colors));
 
@@ -47,15 +61,32 @@ void destroy_block(Block b)
 /* tentative drawing block */
 void draw_block(Block b)
 {
-  /* blocks.c で定義されている配列から、現在の回転状態の4つのセルの座標を取得 */
+  Position tiles[4];
+  GetCellPositions(b, tiles);
+
   for (int i = 0; i < 4; i++) {
-    Position cell_pos = block_shapes[b->id][b->rotationState][i];
+    DrawRectangle(tiles[i].column * b->cellSize + 1,
+                  tiles[i].row * b->cellSize + 1, b->cellSize - 1,
+                  b->cellSize - 1, b->colors[b->id]);
+  }
+}
+
+void Move(Block b, int rows, int columns)
+{
+  b->offset.row += rows;
+  b->offset.column += columns;
+}
+
+void GetCellPositions(Block b, Position movedTiles[4])
+{
+  /* blocks.c
+   * で定義されている配列から、現在の回転状態の4つのセルの座標を取得し、オフセットを足す
+   */
+  for (int i = 0; i < 4; i++) {
+    Position tiles = block_shapes[b->id][b->rotationState][i];
 
     /* 基準位置（offset）にセルの相対座標を足して、実際の画面上の位置を計算 */
-    int screen_row = b->offset.row + cell_pos.row;
-    int screen_col = b->offset.column + cell_pos.column;
-
-    DrawRectangle(screen_col * b->cellSize + 1, screen_row * b->cellSize + 1,
-                  b->cellSize - 1, b->cellSize - 1, b->colors[b->id]);
+    movedTiles[i].row = tiles.row + b->offset.row;
+    movedTiles[i].column = tiles.column + b->offset.column;
   }
 }

@@ -14,8 +14,8 @@ int main(void)
   initialize_grid(gameGrid);
   printgrid(gameGrid);
 
-  // example T block
-  Block currentBlock = create_block(L_BLOCK);
+  Block currentBlock = create_block(I_BLOCK);
+  // Move(currentBlock, 4, 3);
 
   // main loop
   while (!WindowShouldClose()) {
