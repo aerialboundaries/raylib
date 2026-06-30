@@ -2,6 +2,7 @@ NAME        := a.out
 CC          := gcc
 CFLAGS      := -Wall -Wextra -std=c99 -pedantic-errors -MMD -MP
 
+
 # raylibに必要なリンクオプション
 
 LIBS        := -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
@@ -26,18 +27,22 @@ $(NAME): $(OBJS)
 
 	$(CC) $(CFLAGS) -o $@ $^ $(LIBS)
 
+
 # コンパイル工程（ディレクトリ作成も同時に行う）
 # ターゲットに直接カレントディレクトリのファイルを結びつけます
 $(OBJDIR)/%.o: %.c
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
+
 # 依存関係ファイルの読み込み
 -include $(DEPS)
+
 
 .PHONY: clean
 clean:
 	rm -rf $(OBJDIR)
+
 
 .PHONY: fclean
 fclean: clean
@@ -60,5 +65,6 @@ test: all
 	./$(NAME)
 
 .PHONY: run
+
 run: all
 	./$(NAME)
