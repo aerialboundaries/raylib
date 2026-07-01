@@ -1,4 +1,6 @@
 #include <raylib.h>
+#include <stdlib.h>
+#include <time.h>
 
 #include "block.h"
 #include "blocks.h"
@@ -7,6 +9,8 @@
 
 int main(void)
 {
+  srand((unsigned int)time(NULL));
+
   InitWindow(300, 600, "raylib Tetris");
   SetTargetFPS(60);
 
