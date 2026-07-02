@@ -27,3 +27,34 @@ Game create_game(void)
 
   return game;
 }
+
+// internal functions (prototypes)
+static void refill_blocks(Game game);
+static int get_random_block_id(Game game);
+
+// internal functions (implementations)
+static void refill_blocks(Game game)
+{
+  for (int i = 0; i < 7; i++) {
+    game->remaining_blocks[i] = i + 1; // L_block(1) to Z_block(7)
+  }
+  game->block_count = 7;
+}
+
+static int get_random_block_id(Game game)
+{
+  if (game->block_count == 0) {
+    refill_blocks(game);
+  }
+
+  int randomIndex = rand() % game->block_count;
+  int blockId = game->remaining_blocks[randomIndex];
+
+  // delete selected item from array and shift the last item
+  for (int i = randomIndex; i < game->block_count - 1; i++) {
+    game->remaining_blocks[i] = game->remaining_blocks[i + 1];
+  }
+  game->block_count--;
+
+  return blockId;
+}
