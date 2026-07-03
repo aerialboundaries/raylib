@@ -31,7 +31,6 @@ Music game_get_music(Game game);
 2. 新しく追加する game.c の全文 C++ の std::vector
     によるミノのランダム選択（残りのミノからランダムに選び、空になったら7種類再補充する処理）を、C言語の固定長配列と要素数管理（block_count）でスマートに実装しています。
 
-        C
 #include "block.h"
 #include "blocks.h"
 #include "colors.h"
