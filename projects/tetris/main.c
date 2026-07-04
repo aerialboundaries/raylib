@@ -2,10 +2,8 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "block.h"
-#include "blocks.h"
 #include "colors.h"
-#include "grid.h"
+#include "game.h"
 
 int main(void)
 {
@@ -14,25 +12,19 @@ int main(void)
   InitWindow(300, 600, "raylib Tetris");
   SetTargetFPS(60);
 
-  Grid gameGrid = create_grid();
-  initialize_grid(gameGrid);
-  printgrid(gameGrid);
-
-  Block currentBlock = create_block(I_BLOCK);
-  // Move(currentBlock, 4, 3);
+  Game game = create_game();
 
   // main loop
   while (!WindowShouldClose()) {
     BeginDrawing();
     ClearBackground(colors[darkBlue]);
-    Draw(gameGrid);
-    draw_block(currentBlock);
+
+    game_draw(game);
 
     EndDrawing();
   }
 
-  destroy_block(currentBlock);
-  destroy_grid(gameGrid);
+  destroy_game(game);
   CloseWindow();
 
   return 0;
