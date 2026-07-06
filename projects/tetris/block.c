@@ -90,3 +90,17 @@ void GetCellPositions(Block b, Position movedTiles[4])
     movedTiles[i].column = tiles.column + b->offset.column;
   }
 }
+
+void rotate_block_state(Block block)
+{
+  if (block != NULL) {
+    block->rotationState = (block->rotationState + 1) % 4;
+  }
+}
+
+void undo_block_rotation(Block block)
+{
+  if (block != NULL) {
+    block->rotationState = (block->rotationState + 3) % 4; // reberse spin
+  }
+}

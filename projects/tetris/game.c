@@ -177,18 +177,16 @@ static bool is_block_outside(Game game)
   return false;
 }
 
-// 注意: 現状のblock.cには回転(Rotate)と元に戻す(UndoRotation)が未実装のため、
-// ここでは枠組みだけを定義しています。必要に応じてblock.cに回転ロジックを追加してください。
 static void rotate_block(Game game)
 {
   if (!game->gameOver) {
-    // block_typeにrotationStateを変化させる関数を後ほど追加します
-    // currentBlock->rotationState = (currentBlock->rotationState + 1) % 4;
+    rotate_block_state(game->currentBlock);
 
     if (is_block_outside(game) || !block_fits(game)) {
       // 元に戻す処理
+      undo_block_rotation(game->currentBlock);
     } else {
-      PlaySound(game->rotateSound);
+      // PlaySound(game->rotateSound);
     }
   }
 }
