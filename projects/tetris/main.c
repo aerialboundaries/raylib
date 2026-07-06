@@ -16,6 +16,7 @@ int main(void)
 
   // main loop
   while (!WindowShouldClose()) {
+    game_handle_input(game);
     BeginDrawing();
     ClearBackground(colors[darkBlue]);
 
