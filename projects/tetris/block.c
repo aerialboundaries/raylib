@@ -104,3 +104,8 @@ void undo_block_rotation(Block block)
     block->rotationState = (block->rotationState + 3) % 4; // reberse spin
   }
 }
+
+int GetBlockId(Block b)
+{
+  return b->id;
+}

@@ -159,6 +159,7 @@ void game_move_block_down(Game game)
     Move(game->currentBlock, 1, 0);
     if (is_block_outside(game) || !block_fits(game)) {
       Move(game->currentBlock, -1, 0);
+      lock_block(game);
     }
   }
 }
@@ -198,6 +199,8 @@ static void lock_block(Game game)
 
   // ブロックをグリッドに固定
   for (int i = 0; i < 4; i++) {
+    set_cell_value(game->grid, tiles[i].row, tiles[i].column,
+                   GetBlockId(game->currentBlock));
     // block.c から id を取得するゲッター、または直接アクセスが必要です
     // ここでは便宜上、C++のロジック通りにグリッドへ値をセットする流れを示しています
     // ※grid.cのset_cell_value関数を利用します
@@ -228,6 +231,9 @@ static bool block_fits(Game game)
   for (int i = 0; i < 4; i++) {
     // グリッド上の該当セルが空(0)かどうかをチェックする処理
     // 必要に応じてgrid.cにセルの値を取得する関数を追加してください
+    if (get_cell_value(game->grid, tiles[i].row, tiles[i].column) != 0) {
+      return false;
+    }
   }
   return true;
 }

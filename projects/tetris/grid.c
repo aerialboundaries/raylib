@@ -72,3 +72,8 @@ void set_cell_value(Grid g, int row, int col, int value)
 {
   g->grid[row][col] = value;
 }
+
+int get_cell_value(Grid g, int row, int col)
+{
+  return g->grid[row][col];
+}
