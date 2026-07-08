@@ -5,6 +5,18 @@
 #include "colors.h"
 #include "game.h"
 
+double lastUpdateTime = 0;
+
+bool EventTriggered(double interval)
+{
+  double currentTime = GetTime();
+  if (currentTime - lastUpdateTime >= interval) {
+    lastUpdateTime = currentTime;
+    return true;
+  }
+  return false;
+}
+
 int main(void)
 {
   srand((unsigned int)time(NULL));
@@ -17,6 +29,9 @@ int main(void)
   // main loop
   while (!WindowShouldClose()) {
     game_handle_input(game);
+    if (EventTriggered(0.2)) {
+      game_move_block_down(game);
+    }
     BeginDrawing();
     ClearBackground(colors[darkBlue]);
 
