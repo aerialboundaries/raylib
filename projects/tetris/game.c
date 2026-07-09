@@ -201,14 +201,12 @@ static void lock_block(Game game)
   for (int i = 0; i < 4; i++) {
     set_cell_value(game->grid, tiles[i].row, tiles[i].column,
                    GetBlockId(game->currentBlock));
-    // block.c から id を取得するゲッター、または直接アクセスが必要です
-    // ここでは便宜上、C++のロジック通りにグリッドへ値をセットする流れを示しています
-    // ※grid.cのset_cell_value関数を利用します
-    // set_cell_value(game->grid, tiles[i].row, tiles[i].column, id);
   }
 
   destroy_block(game->currentBlock);
   game->currentBlock = game->nextBlock;
+
+  clear_full_rows(game->grid);
 
   if (!block_fits(game)) {
     game->gameOver = true;
@@ -217,11 +215,11 @@ static void lock_block(Game game)
   game->nextBlock = create_block(get_random_block_id(game));
 
   // グリッドの行削除処理（現状のgrid.cには未実装のため、今後追加する要素となります）
-  int rowsCleared = 0;
-  if (rowsCleared > 0) {
-    PlaySound(game->clearSound);
-    update_score(game, rowsCleared, 0);
-  }
+  // int rowsCleared = 0;
+  // if (rowsCleared > 0) {
+  //   PlaySound(game->clearSound);
+  //   update_score(game, rowsCleared, 0);
+  // }
 }
 
 static bool block_fits(Game game)

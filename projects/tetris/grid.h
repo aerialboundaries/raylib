@@ -13,3 +13,7 @@ void printgrid(Grid g);
 void Draw(Grid g);
 void set_cell_value(Grid g, int row, int col, int value);
 int get_cell_value(Grid g, int row, int col);
+bool is_row_full(Grid g, int row);
+void clear_row(Grid g, int row);
+void move_row_down(Grid g, int row, int num_rows);
+int clear_full_rows(Grid g);

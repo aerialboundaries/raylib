@@ -19,7 +19,6 @@ struct block_type {
   int cellSize;
   int rotationState;
   Position offset;
-  Color colors[MAX_COLOR];
 };
 
 Block create_block(int id)
@@ -48,8 +47,6 @@ Block create_block(int id)
     break;
   }
 
-  memcpy(b->colors, colors, sizeof(colors));
-
   return b;
 }
 
@@ -58,7 +55,6 @@ void destroy_block(Block b)
   free(b);
 }
 
-/* tentative drawing block */
 void draw_block(Block b)
 {
   Position tiles[4];
@@ -67,7 +63,7 @@ void draw_block(Block b)
   for (int i = 0; i < 4; i++) {
     DrawRectangle(tiles[i].column * b->cellSize + 1,
                   tiles[i].row * b->cellSize + 1, b->cellSize - 1,
-                  b->cellSize - 1, b->colors[b->id]);
+                  b->cellSize - 1, colors[b->id]);
   }
 }
 

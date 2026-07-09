@@ -17,7 +17,6 @@ struct grid_type {
   int rows;
   int cols;
   int cellSize;
-  Color colors[MAX_COLOR];
 };
 
 Grid create_grid(void)
@@ -28,7 +27,6 @@ Grid create_grid(void)
   g->rows = NUMROWS;
   g->cols = NUMCOLS;
   g->cellSize = 30; // cell size for 300 x 600
-  memcpy(g->colors, colors, sizeof(colors));
 
   return g;
 }
@@ -76,4 +74,43 @@ void set_cell_value(Grid g, int row, int col, int value)
 int get_cell_value(Grid g, int row, int col)
 {
   return g->grid[row][col];
+}
+
+bool is_row_full(Grid g, int row)
+{
+  for (int column = 0; column < NUMCOLS; column++) {
+    if (g->grid[row][column] == 0) {
+      return false;
+    }
+  }
+  return true;
+}
+
+void clear_row(Grid g, int row)
+{
+  for (int column = 0; column < NUMCOLS; column++) {
+    g->grid[row][column] = 0;
+  }
+}
+
+void move_row_down(Grid g, int row, int num_rows)
+{
+  for (int column = 0; column < NUMCOLS; column++) {
+    g->grid[row + num_rows][column] = g->grid[row][column];
+    g->grid[row][column] = 0;
+  }
+}
+
+int clear_full_rows(Grid g)
+{
+  int completed = 0;
+  for (int row = NUMROWS - 1; row >= 0; row--) {
+    if (is_row_full(g, row)) {
+      clear_row(g, row);
+      completed++;
+    } else if (completed > 0) {
+      move_row_down(g, row, completed);
+    }
+  }
+  return completed;
 }
