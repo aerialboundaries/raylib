@@ -214,7 +214,6 @@ static void lock_block(Game game)
 
   game->nextBlock = create_block(get_random_block_id(game));
 
-  // グリッドの行削除処理（現状のgrid.cには未実装のため、今後追加する要素となります）
   // int rowsCleared = 0;
   // if (rowsCleared > 0) {
   //   PlaySound(game->clearSound);
