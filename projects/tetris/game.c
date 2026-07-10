@@ -4,8 +4,6 @@
 #include <stdlib.h>
 
 #include "block.h"
-#include "blocks.h"
-#include "colors.h"
 #include "game.h"
 #include "grid.h"
 
