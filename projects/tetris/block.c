@@ -55,14 +55,14 @@ void destroy_block(Block b)
   free(b);
 }
 
-void draw_block(Block b)
+void draw_block(Block b, int offsetX, int offsetY)
 {
   Position tiles[4];
   GetCellPositions(b, tiles);
 
   for (int i = 0; i < 4; i++) {
-    DrawRectangle(tiles[i].column * b->cellSize + 11,
-                  tiles[i].row * b->cellSize + 11, b->cellSize - 1,
+    DrawRectangle(tiles[i].column * b->cellSize + offsetX,
+                  tiles[i].row * b->cellSize + offsetY, b->cellSize - 1,
                   b->cellSize - 1, colors[b->id]);
   }
 }

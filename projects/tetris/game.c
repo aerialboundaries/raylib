@@ -76,7 +76,18 @@ void destroy_game(Game game)
 void game_draw(Game game)
 {
   Draw(game->grid);
-  draw_block(game->currentBlock);
+  draw_block(game->currentBlock, 11, 11);
+  switch (GetBlockId(game->nextBlock)) {
+  case 3:
+    draw_block(game->nextBlock, 255, 290);
+    break;
+  case 4:
+    draw_block(game->nextBlock, 255, 280);
+    break;
+  default:
+    draw_block(game->nextBlock, 270, 270);
+    break;
+  }
 }
 
 void game_handle_input(Game game)
