@@ -38,7 +38,7 @@ static void rotate_block(Game game);
 static void lock_block(Game game);
 static bool block_fits(Game game);
 static void game_reset(Game game);
-static void update_score(Game game, int linsCleared, int movoDownPoints);
+static void update_score(Game game, int linesCleared, int movoDownPoints);
 
 Game create_game(void)
 {
@@ -206,7 +206,7 @@ static void lock_block(Game game)
   destroy_block(game->currentBlock);
   game->currentBlock = game->nextBlock;
 
-  clear_full_rows(game->grid);
+  // clear_full_rows(game->grid);
 
   if (!block_fits(game)) {
     game->gameOver = true;
@@ -214,11 +214,11 @@ static void lock_block(Game game)
 
   game->nextBlock = create_block(get_random_block_id(game));
 
-  // int rowsCleared = 0;
-  // if (rowsCleared > 0) {
-  //   PlaySound(game->clearSound);
-  //   update_score(game, rowsCleared, 0);
-  // }
+  int rowsCleared = clear_full_rows(game->grid);
+  if (rowsCleared > 0) {
+    // PlaySound(game->clearSound);
+    update_score(game, rowsCleared, 0);
+  }
 }
 
 static bool block_fits(Game game)
