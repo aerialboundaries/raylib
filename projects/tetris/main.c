@@ -21,8 +21,10 @@ int main(void)
 {
   srand((unsigned int)time(NULL));
 
-  InitWindow(300, 600, "raylib Tetris");
+  InitWindow(500, 620, "raylib Tetris");
   SetTargetFPS(60);
+
+  Font font = LoadFontEx("Font/monogram.ttf", 64, 0, 0);
 
   Game game = create_game();
 
@@ -34,6 +36,15 @@ int main(void)
     }
     BeginDrawing();
     ClearBackground(colors[darkBlue]);
+    DrawTextEx(font, "Score", (Vector2){365, 15}, 38, 2, WHITE);
+    DrawTextEx(font, "Next", (Vector2){370, 175}, 38, 2, WHITE);
+    if (game_is_over(game)) {
+      DrawTextEx(font, "GAME OVER", (Vector2){320, 450}, 38, 2, WHITE);
+    }
+    DrawRectangleRounded((Rectangle){320, 55, 170, 60}, 0.3, 6,
+                         colors[lightBlue]);
+    DrawRectangleRounded((Rectangle){320, 215, 170, 180}, 0.3, 6,
+                         colors[lightBlue]);
 
     game_draw(game);
 

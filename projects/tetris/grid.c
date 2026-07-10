@@ -60,7 +60,7 @@ void Draw(Grid g)
   for (int row = 0; row < NUMROWS; row++) {
     for (int column = 0; column < NUMCOLS; column++) {
       int cellValue = g->grid[row][column];
-      DrawRectangle(column * g->cellSize + 1, row * g->cellSize + 1,
+      DrawRectangle(column * g->cellSize + 11, row * g->cellSize + 11,
                     g->cellSize - 1, g->cellSize - 1, colors[cellValue]);
     }
   }
