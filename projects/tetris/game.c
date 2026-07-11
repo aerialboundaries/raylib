@@ -106,18 +106,30 @@ void game_handle_input(Game game)
 
   switch (keyPressed) {
   case KEY_LEFT:
+  case KEY_A:
     game_move_block_left(game);
     break;
   case KEY_RIGHT:
+  case KEY_D:
     game_move_block_right(game);
     break;
-  case KEY_DOWN:
-    game_move_block_down(game);
-    update_score(game, 0, 1);
-    break;
   case KEY_UP:
+  case KEY_SPACE:
     rotate_block(game);
     break;
+  }
+  // 【修正】押しっぱなし（長押し）を検出する処理
+  // ゲームオーバーでない、かつ下キーが押されている間は毎フレーム実行される
+  static int soft_drop_counter = 0;
+
+  if (!game->gameOver && (IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S))) {
+    soft_drop_counter++;
+    if (soft_drop_counter >= 3) { // 3フレームに一回だけ落とす
+      game_move_block_down(game);
+      update_score(game, 0, 1);
+    }
+  } else {
+    soft_drop_counter = 0; // keyを話したらリセット
   }
 }
 
