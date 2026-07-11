@@ -55,6 +55,11 @@ Game create_game(void)
 
   game->gameOver = false;
   game->score = 0;
+  InitAudioDevice();
+  game->music = LoadMusicStream("Sounds/music.mp3");
+  PlayMusicStream(game->music);
+  game->rotateSound = LoadSound("Sounds/rotate.mp3");
+  game->clearSound = LoadSound("Sounds/clear.mp3");
 
   return game;
 }
@@ -69,6 +74,11 @@ void destroy_game(Game game)
     destroy_block(game->currentBlock);
   if (game->nextBlock)
     destroy_block(game->nextBlock);
+
+  UnloadSound(game->rotateSound);
+  UnloadSound(game->clearSound);
+  UnloadMusicStream(game->music);
+  CloseAudioDevice();
 
   free(game);
 }
@@ -196,7 +206,7 @@ static void rotate_block(Game game)
       // 元に戻す処理
       undo_block_rotation(game->currentBlock);
     } else {
-      // PlaySound(game->rotateSound);
+      PlaySound(game->rotateSound);
     }
   }
 }
@@ -225,7 +235,7 @@ static void lock_block(Game game)
 
   int rowsCleared = clear_full_rows(game->grid);
   if (rowsCleared > 0) {
-    // PlaySound(game->clearSound);
+    PlaySound(game->clearSound);
     update_score(game, rowsCleared, 0);
   }
 }

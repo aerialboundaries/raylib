@@ -31,6 +31,7 @@ int main(void)
 
   // main loop
   while (!WindowShouldClose()) {
+    UpdateMusicStream(game_get_music(game));
     game_handle_input(game);
     if (EventTriggered(0.2)) {
       game_move_block_down(game);

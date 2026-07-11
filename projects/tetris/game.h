@@ -3,9 +3,6 @@
 #include <raylib.h>
 #include <stdbool.h>
 
-#include "block.h"
-#include "grid.h"
-
 typedef struct game_type *Game;
 
 Game create_game(void);
