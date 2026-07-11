@@ -1,18 +1,13 @@
 #include <raylib.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "block.h"
 #include "blocks.h"
 #include "colors.h"
+#include "config.h"
+#include "error.h"
 #include "position.h"
-
-static void terminate(const char *message)
-{
-  printf("%s\n", message);
-  exit(EXIT_FAILURE);
-}
 
 struct block_type {
   int id;
@@ -28,16 +23,16 @@ Block create_block(int id)
     terminate("Error in create: block could not be created.");
 
   b->id = id;
-  b->cellSize = 30;
+  b->cellSize = CELL_SIZE;
   b->rotationState = 0;
 
   // switch文の中で、すべてのケース（defaultを含む）で完全に初期化を行います
   switch (id) {
-  case 3: // 例: Iブロック
+  case I_BLOCK: // Iブロック
     b->offset.row = -1;
     b->offset.column = 3;
     break;
-  case 4: // 例: Oブロック
+  case O_BLOCK: // 例: Oブロック
     b->offset.row = 0;
     b->offset.column = 4;
     break;

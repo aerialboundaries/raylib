@@ -4,13 +4,9 @@
 #include <string.h>
 
 #include "colors.h"
+#include "config.h"
+#include "error.h"
 #include "grid.h"
-
-static void terminate(const char *message)
-{
-  printf("%s\n", message);
-  exit(EXIT_FAILURE);
-}
 
 struct grid_type {
   int grid[NUMROWS][NUMCOLS];
@@ -26,7 +22,7 @@ Grid create_grid(void)
     terminate("Error in create: grid could not be created.");
   g->rows = NUMROWS;
   g->cols = NUMCOLS;
-  g->cellSize = 30; // cell size for 300 x 600
+  g->cellSize = CELL_SIZE; // cell size for 300 x 600
 
   return g;
 }

@@ -1,17 +1,13 @@
 #include <raylib.h>
 #include <stdbool.h>
-#include <stdio.h>
 #include <stdlib.h>
 
 #include "block.h"
+#include "blocks.h"
+#include "config.h"
+#include "error.h"
 #include "game.h"
 #include "grid.h"
-
-static void terminate(const char *message)
-{
-  printf("%s\n", message);
-  exit(EXIT_FAILURE);
-}
 
 struct game_type {
   Grid grid;
@@ -86,12 +82,12 @@ void destroy_game(Game game)
 void game_draw(Game game)
 {
   Draw(game->grid);
-  draw_block(game->currentBlock, 11, 11);
+  draw_block(game->currentBlock, GRID_OFFSET_X, GRID_OFFSET_Y);
   switch (GetBlockId(game->nextBlock)) {
-  case 3:
+  case I_BLOCK:
     draw_block(game->nextBlock, 255, 290);
     break;
-  case 4:
+  case O_BLOCK:
     draw_block(game->nextBlock, 255, 280);
     break;
   default:

@@ -4,6 +4,7 @@
 #include <time.h>
 
 #include "colors.h"
+#include "config.h"
 #include "game.h"
 
 double lastUpdateTime = 0;
@@ -41,18 +42,18 @@ int main(void)
     DrawTextEx(font, "Score", (Vector2){365, 15}, 38, 2, WHITE);
     DrawTextEx(font, "Next", (Vector2){370, 175}, 38, 2, WHITE);
     if (game_is_over(game)) {
-      DrawTextEx(font, "GAME OVER", (Vector2){320, 450}, 38, 2, WHITE);
+      DrawTextEx(font, "GAME OVER", (Vector2){SIDEBAR_X, 450}, 38, 2, WHITE);
     }
-    DrawRectangleRounded((Rectangle){320, 55, 170, 60}, 0.3, 6,
+    DrawRectangleRounded((Rectangle){SIDEBAR_X, 55, 170, 60}, 0.3, 6,
                          colors[lightBlue]);
 
     char scoreText[10];
     sprintf(scoreText, "%d", game_get_score(game));
     Vector2 textSize = MeasureTextEx(font, scoreText, 38, 2);
 
-    DrawTextEx(font, scoreText, (Vector2){320 + (170 - textSize.x) / 2, 65}, 38,
-               2, WHITE);
-    DrawRectangleRounded((Rectangle){320, 215, 170, 180}, 0.3, 6,
+    DrawTextEx(font, scoreText,
+               (Vector2){SIDEBAR_X + (170 - textSize.x) / 2, 65}, 38, 2, WHITE);
+    DrawRectangleRounded((Rectangle){SIDEBAR_X, 215, 170, 180}, 0.3, 6,
                          colors[lightBlue]);
 
     game_draw(game);
