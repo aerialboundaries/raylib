@@ -278,6 +278,9 @@ static void update_score(Game game, int linesCleared, int moveDownPoints)
   case 3:
     game->score += 500;
     break;
+  case 4:
+    game->score += 800;
+    break;
   default:
     break;
   }
