@@ -7,9 +7,9 @@
 #include "config.h"
 #include "game.h"
 
-double lastUpdateTime = 0;
+static double lastUpdateTime = 0;
 
-bool EventTriggered(double interval)
+static bool EventTriggered(double interval)
 {
   double currentTime = GetTime();
   if (currentTime - lastUpdateTime >= interval) {

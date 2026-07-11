@@ -10,7 +10,7 @@ Grid create_grid(void);
 void destroy_grid(Grid g);
 void initialize_grid(Grid g);
 void printgrid(Grid g);
-void Draw(Grid g);
+void grid_draw(Grid g);
 void set_cell_value(Grid g, int row, int col, int value);
 int get_cell_value(Grid g, int row, int col);
 bool is_row_full(Grid g, int row);

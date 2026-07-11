@@ -81,7 +81,7 @@ void destroy_game(Game game)
 
 void game_draw(Game game)
 {
-  Draw(game->grid);
+  grid_draw(game->grid);
   draw_block(game->currentBlock, GRID_OFFSET_X, GRID_OFFSET_Y);
   switch (GetBlockId(game->nextBlock)) {
   case I_BLOCK:
@@ -151,9 +151,9 @@ static int get_random_block_id(Game game)
 static void game_move_block_left(Game game)
 {
   if (!game->gameOver) {
-    Move(game->currentBlock, 0, -1);
+    move_block(game->currentBlock, 0, -1);
     if (is_block_outside(game) || !block_fits(game)) {
-      Move(game->currentBlock, 0, 1);
+      move_block(game->currentBlock, 0, 1);
     }
   }
 }
@@ -161,9 +161,9 @@ static void game_move_block_left(Game game)
 static void game_move_block_right(Game game)
 {
   if (!game->gameOver) {
-    Move(game->currentBlock, 0, 1);
+    move_block(game->currentBlock, 0, 1);
     if (is_block_outside(game) || !block_fits(game)) {
-      Move(game->currentBlock, 0, -1);
+      move_block(game->currentBlock, 0, -1);
     }
   }
 }
@@ -171,9 +171,9 @@ static void game_move_block_right(Game game)
 void game_move_block_down(Game game)
 {
   if (!game->gameOver) {
-    Move(game->currentBlock, 1, 0);
+    move_block(game->currentBlock, 1, 0);
     if (is_block_outside(game) || !block_fits(game)) {
-      Move(game->currentBlock, -1, 0);
+      move_block(game->currentBlock, -1, 0);
       lock_block(game);
     }
   }

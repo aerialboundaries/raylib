@@ -62,7 +62,7 @@ void draw_block(Block b, int offsetX, int offsetY)
   }
 }
 
-void Move(Block b, int rows, int columns)
+void move_block(Block b, int rows, int columns)
 {
   b->offset.row += rows;
   b->offset.column += columns;

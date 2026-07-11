@@ -51,7 +51,7 @@ void printgrid(Grid g)
   }
 }
 
-void Draw(Grid g)
+void grid_draw(Grid g)
 {
   for (int row = 0; row < NUMROWS; row++) {
     for (int column = 0; column < NUMCOLS; column++) {
