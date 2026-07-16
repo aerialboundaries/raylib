@@ -3,6 +3,7 @@
 #include <stdlib.h>
 
 #include "block.h"
+
 #include "blocks.h"
 #include "config.h"
 #include "error.h"
@@ -19,20 +20,37 @@ struct game_type {
   int score;
   Music music;
   Sound rotateSound;
+
   Sound clearSound;
+
+  // --- ロック猶予（Lock Delay）関連の状態 ---
+  bool lockDelayActive; // 現在ロック猶予タイマーが作動中か
+  double
+      lockDelayStartTime; // タイマーが最後にリセットされた時刻（GetTime()基準）
+  int lockResetCount; // 猶予タイマーをリセットした回数
+
+  int lowestRowReached; // このブロックが今回の落下で到達した最も深い行
 };
 
 // internal functions (prototypes)
 static void refill_blocks(Game game);
 static int get_random_block_id(Game game);
+
 static void game_move_block_left(Game game);
 static void game_move_block_right(Game game);
 static bool is_block_outside(Game game);
 static void rotate_block(Game game);
 static void lock_block(Game game);
 static bool block_fits(Game game);
+
 static void game_reset(Game game);
 static void update_score(Game game, int linesCleared, int movoDownPoints);
+
+// ロック猶予（Lock Delay / Infinity）関連の内部関数
+static bool can_move_down(Game game);
+static int get_block_lowest_row(Game game);
+static void reset_lock_delay_if_grounded(Game game);
+static void start_new_block_tracking(Game game);
 
 Game create_game(void)
 {
@@ -41,13 +59,16 @@ Game create_game(void)
     terminate("Error: game could not be created.");
 
   game->grid = create_grid();
+
   initialize_grid(game->grid);
 
   game->block_count = 0;
   refill_blocks(game);
 
   game->currentBlock = create_block(get_random_block_id(game));
+
   game->nextBlock = create_block(get_random_block_id(game));
+  start_new_block_tracking(game);
 
   game->gameOver = false;
   game->score = 0;
@@ -66,7 +87,9 @@ void destroy_game(Game game)
     return;
 
   destroy_grid(game->grid);
+
   if (game->currentBlock)
+
     destroy_block(game->currentBlock);
   if (game->nextBlock)
     destroy_block(game->nextBlock);
@@ -100,7 +123,9 @@ void game_handle_input(Game game)
 {
   int keyPressed = GetKeyPressed();
   if (game->gameOver && keyPressed != 0) {
+
     game->gameOver = false;
+
     game_reset(game);
   }
 
@@ -115,6 +140,7 @@ void game_handle_input(Game game)
     break;
   case KEY_UP:
   case KEY_SPACE:
+
     rotate_block(game);
     break;
   }
@@ -123,10 +149,16 @@ void game_handle_input(Game game)
   static int soft_drop_counter = 0;
 
   if (!game->gameOver && (IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S))) {
+
     soft_drop_counter++;
     if (soft_drop_counter >= 3) { // 3フレームに一回だけ落とす
-      game_move_block_down(game);
-      update_score(game, 0, 1);
+      soft_drop_counter = 0;
+      // 実際に1マス下に移動できた場合のみ加点する
+      // （接地していて動けなかった場合は加点しない）
+      if (game_move_block_down(game)) {
+
+        update_score(game, 0, 1);
+      }
     }
   } else {
     soft_drop_counter = 0; // keyを話したらリセット
@@ -161,34 +193,61 @@ static int get_random_block_id(Game game)
 }
 
 static void game_move_block_left(Game game)
+
 {
   if (!game->gameOver) {
     move_block(game->currentBlock, 0, -1);
     if (is_block_outside(game) || !block_fits(game)) {
       move_block(game->currentBlock, 0, 1);
+    } else {
+      // 移動に成功した場合、接地中であればロック猶予をリセット
+      reset_lock_delay_if_grounded(game);
     }
   }
 }
 
 static void game_move_block_right(Game game)
+
 {
   if (!game->gameOver) {
     move_block(game->currentBlock, 0, 1);
     if (is_block_outside(game) || !block_fits(game)) {
       move_block(game->currentBlock, 0, -1);
+    } else {
+      // 移動に成功した場合、接地中であればロック猶予をリセット
+      reset_lock_delay_if_grounded(game);
     }
   }
 }
 
-void game_move_block_down(Game game)
+bool game_move_block_down(Game game)
+
 {
-  if (!game->gameOver) {
-    move_block(game->currentBlock, 1, 0);
-    if (is_block_outside(game) || !block_fits(game)) {
-      move_block(game->currentBlock, -1, 0);
-      lock_block(game);
-    }
+  if (game->gameOver)
+    return false;
+
+  move_block(game->currentBlock, 1, 0);
+  if (is_block_outside(game) || !block_fits(game)) {
+    // これ以上下に動けない＝接地。ここでは即ロックしない。
+    // ロックするかどうかはgame_update内のロック猶予タイマーに任せる。
+    move_block(game->currentBlock, -1, 0);
+    return false;
   }
+
+  // 下に移動できた＝空中にいるのでロック猶予を解除
+  game->lockDelayActive = false;
+
+  // 今回の落下で新しく到達した深さであれば、リセット回数を0に戻す。
+  // これにより「実際に下へ進んでいる限りは粘れる」という
+  // Infinity的な挙動になる（横移動や回転だけでは粘り続けられない）。
+  int currentLowestRow = get_block_lowest_row(game);
+  if (currentLowestRow > game->lowestRowReached) {
+    game->lowestRowReached = currentLowestRow;
+
+    game->lockResetCount = 0;
+  }
+
+  return true;
 }
 
 static bool is_block_outside(Game game)
@@ -206,6 +265,7 @@ static bool is_block_outside(Game game)
 }
 
 static void rotate_block(Game game)
+
 {
   if (!game->gameOver) {
     rotate_block_state(game->currentBlock);
@@ -215,6 +275,9 @@ static void rotate_block(Game game)
       undo_block_rotation(game->currentBlock);
     } else {
       PlaySound(game->rotateSound);
+      // 回転に成功した場合、接地中であればロック猶予をリセット
+
+      reset_lock_delay_if_grounded(game);
     }
   }
 }
@@ -233,6 +296,9 @@ static void lock_block(Game game)
   destroy_block(game->currentBlock);
   game->currentBlock = game->nextBlock;
 
+  // 新しいブロックの追跡を開始（ロック猶予の状態をリセット）
+  start_new_block_tracking(game);
+
   // clear_full_rows(game->grid);
 
   if (!block_fits(game)) {
@@ -250,16 +316,107 @@ static void lock_block(Game game)
 
 static bool block_fits(Game game)
 {
+
   Position tiles[4];
+
   GetCellPositions(game->currentBlock, tiles);
+
   for (int i = 0; i < 4; i++) {
+
     // グリッド上の該当セルが空(0)かどうかをチェックする処理
+
     // 必要に応じてgrid.cにセルの値を取得する関数を追加してください
     if (get_cell_value(game->grid, tiles[i].row, tiles[i].column) != 0) {
+
       return false;
     }
   }
   return true;
+}
+
+// 現在のブロックが、盤面の状態を変えずに「あと1マス下に動けるか」を判定する。
+// 実際にブロックを動かしてから元に戻すことで、is_block_outside/block_fits
+// という既存の判定関数を副作用なしで再利用している。
+static bool can_move_down(Game game)
+
+{
+  move_block(game->currentBlock, 1, 0);
+  bool fits = !is_block_outside(game) && block_fits(game);
+  move_block(game->currentBlock, -1, 0);
+  return fits;
+}
+
+// 現在のブロックが占めている4マスのうち、最も下（rowの値が最大）の行を返す。
+// 「このブロックが今回の落下でどこまで深く到達したか」を追跡するために使う。
+static int get_block_lowest_row(Game game)
+{
+  Position tiles[4];
+  GetCellPositions(game->currentBlock, tiles);
+
+  int lowestRow = tiles[0].row;
+  for (int i = 1; i < 4; i++) {
+    if (tiles[i].row > lowestRow) {
+      lowestRow = tiles[i].row;
+    }
+  }
+
+  return lowestRow;
+}
+
+// 接地中（ロック猶予タイマー作動中）であれば、タイマーをリセットする。
+// ただし MAX_LOCK_RESETS 回を超えてはリセットしない
+// （＝標準的なテトリスの「Infinity」の上限に相当する）。
+// 上限に達した後は、この関数は何もしないため、既存のタイマーが
+// そのままカウントダウンを続け、いずれ猶予切れでロックされる。
+static void reset_lock_delay_if_grounded(Game game)
+
+{
+  if (!game->lockDelayActive)
+    return; // 空中にいるので、そもそもリセットする対象がない
+
+  if (game->lockResetCount < MAX_LOCK_RESETS) {
+    game->lockDelayStartTime = GetTime();
+    game->lockResetCount++;
+  }
+}
+
+// currentBlockが新しく出現した（スポーンした）ときに呼ぶ。
+// ロック猶予に関する状態をすべて初期状態に戻す。
+static void start_new_block_tracking(Game game)
+{
+
+  game->lockDelayActive = false;
+  game->lockResetCount = 0;
+  game->lowestRowReached = get_block_lowest_row(game);
+}
+
+// 毎フレーム呼び出す。ロック猶予タイマーの管理と、猶予切れになった
+// ブロックの固定（ロック）を行う。
+void game_update(Game game)
+{
+  if (game->gameOver)
+    return;
+
+  if (can_move_down(game)) {
+    // まだ下に空間があるので、接地しておらずロック猶予も不要
+    game->lockDelayActive = false;
+    return;
+  }
+
+  // ここに来た時点で「接地している」状態
+  if (!game->lockDelayActive) {
+    // 接地した瞬間なので、猶予タイマーを開始する
+    game->lockDelayActive = true;
+    game->lockDelayStartTime = GetTime();
+
+    return;
+  }
+
+  // 猶予タイマーが開始済みで、かつ猶予時間を過ぎていたらロックする
+  if (GetTime() - game->lockDelayStartTime >= LOCK_DELAY) {
+    lock_block(game);
+    game->lockDelayActive = false;
+  }
 }
 
 static void game_reset(Game game)
@@ -274,13 +431,17 @@ static void game_reset(Game game)
     destroy_block(game->nextBlock);
 
   game->currentBlock = create_block(get_random_block_id(game));
+
   game->nextBlock = create_block(get_random_block_id(game));
+  start_new_block_tracking(game);
   game->score = 0;
 }
 
 static void update_score(Game game, int linesCleared, int moveDownPoints)
 {
+
   switch (linesCleared) {
+
   case 1:
     game->score += 100;
     break;
@@ -293,6 +454,7 @@ static void update_score(Game game, int linesCleared, int moveDownPoints)
   case 4:
     game->score += 800;
     break;
+
   default:
     break;
   }

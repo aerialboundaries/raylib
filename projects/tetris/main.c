@@ -37,9 +37,12 @@ int main(void)
     if (EventTriggered(0.2)) {
       game_move_block_down(game);
     }
+    // ロック猶予タイマーの監視・ロック処理を毎フレーム行う
+    game_update(game);
     BeginDrawing();
     ClearBackground(colors[darkBlue]);
     DrawTextEx(font, "Score", (Vector2){365, 15}, 38, 2, WHITE);
+
     DrawTextEx(font, "Next", (Vector2){370, 175}, 38, 2, WHITE);
     if (game_is_over(game)) {
       DrawTextEx(font, "GAME OVER", (Vector2){SIDEBAR_X, 450}, 38, 2, WHITE);
@@ -48,7 +51,9 @@ int main(void)
                          colors[lightBlue]);
 
     char scoreText[10];
+
     sprintf(scoreText, "%d", game_get_score(game));
+
     Vector2 textSize = MeasureTextEx(font, scoreText, 38, 2);
 
     DrawTextEx(font, scoreText,
