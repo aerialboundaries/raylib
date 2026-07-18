@@ -1,6 +1,6 @@
 NAME        := a.out
 CC          := gcc
-CFLAGS      := -Wall -Wextra -std=c99 -pedantic-errors -MMD -MP
+CFLAGS      := -g -Wall -Wextra -std=c99 -pedantic-errors -MMD -MP
 
 
 # raylibに必要なリンクオプション

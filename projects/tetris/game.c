@@ -317,7 +317,6 @@ static void lock_block(Game game)
   if (!block_fits(game)) {
 
     game->gameOver = true;
-    return; // ゲームオーバー時はこれ以上次のブロックの生成などをしない
   }
 
   // 5. 新しい「次のブロック」を生成
