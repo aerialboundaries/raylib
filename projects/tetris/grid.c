@@ -41,16 +41,6 @@ void initialize_grid(Grid g)
   }
 }
 
-void printgrid(Grid g)
-{
-  for (int row = 0; row < NUMROWS; row++) {
-    for (int column = 0; column < NUMCOLS; column++) {
-      printf("%d ", g->grid[row][column]);
-    }
-    printf("\n");
-  }
-}
-
 void grid_draw(Grid g)
 {
   for (int row = 0; row < NUMROWS; row++) {
